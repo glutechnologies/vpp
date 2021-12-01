@@ -425,6 +425,10 @@ VLIB_NODE_FN (det44_out2in_node) (vlib_main_t * vm,
       tcp0 = (tcp_header_t *) udp0;
 
       sw_if_index0 = vnet_buffer (b0)->sw_if_index[VLIB_RX];
+            /* do not interfere with packets to the interface address (control plane) */
+      if (PREDICT_FALSE (!det44_is_interface_addr (node, sw_if_index0,
+ ip0->dst_address.as_u32)))
+         goto trace0;
 
       if (PREDICT_FALSE (ip0->ttl == 1))
 	{
@@ -543,6 +547,11 @@ VLIB_NODE_FN (det44_out2in_node) (vlib_main_t * vm,
       tcp1 = (tcp_header_t *) udp1;
 
       sw_if_index1 = vnet_buffer (b1)->sw_if_index[VLIB_RX];
+
+      /* do not interfere with packets to the interface address (control plane) */
+      if (PREDICT_FALSE (!det44_is_interface_addr (node, sw_if_index1,
+	ip1->dst_address.as_u32)))
+          goto trace1;
 
       if (PREDICT_FALSE (ip1->ttl == 1))
 	{
@@ -688,7 +697,11 @@ VLIB_NODE_FN (det44_out2in_node) (vlib_main_t * vm,
       tcp0 = (tcp_header_t *) udp0;
 
       sw_if_index0 = vnet_buffer (b0)->sw_if_index[VLIB_RX];
-
+      /* do not interfere with packets to the interface address (control plane) */
+      if (PREDICT_FALSE (!det44_is_interface_addr (node, sw_if_index0,
+        ip0->dst_address.as_u32)))
+            goto trace00;
+      
       if (PREDICT_FALSE (ip0->ttl == 1))
 	{
 	  vnet_buffer (b0)->sw_if_index[VLIB_TX] = (u32) ~ 0;
