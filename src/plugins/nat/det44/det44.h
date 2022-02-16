@@ -61,7 +61,7 @@ typedef enum
 #undef _
 } det44_session_state_t;
 
-#define DET44_SES_PER_USER 1000
+#define DET44_SES_PER_USER 4032 
 
 typedef struct
 {
